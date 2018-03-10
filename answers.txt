@@ -1,5 +1,6 @@
 1. How many professionals/company profiles actually exists and can be discovered and processed? 
 How many unique categories are presented there?
+- profiles - 17244
 - categories - 1246
 2. Is it any other ways to review each profile rather then just navigating through the listings? API? 
 Mobile apps?
