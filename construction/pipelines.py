@@ -1,40 +1,25 @@
-import pymongo
 from datetime import timedelta
 
+import pymongo
 from scrapy import signals
-from scrapy.exporters import JsonItemExporter
+
+from scrapy.conf import settings
+from scrapy.exceptions import DropItem
+from scrapy import log
 
 
 class MongoDBPipeline(object):
-    collection_name = 'profiles'
 
-    def __init__(self, mongo_uri, mongo_db):
-        self.mongo_uri = mongo_uri
-        self.mongo_db = mongo_db
-
-    @classmethod
-    def from_crawler(cls, crawler):
-        return cls(
-            mongo_uri=crawler.settings.get('MONGO_URI'),
-            mongo_db=crawler.settings.get('MONGO_DATABASE')
-        )
-
-    def open_spider(self, spider):
-        self.client = pymongo.MongoClient(self.mongo_uri)
-        self.db = self.client[self.mongo_db]
-
-    def close_spider(self, spider):
-        self.client.close()
-
-    def process_item(self, item, spider):
-        self.db[self.collection_name].insert_one(dict(item))
-        return item
-
-
-class StatsPipeline(object):
     def __init__(self, stats):
-        self.file = open('stats.txt', 'a')
+        # logs info
         self.stats = stats
+        # Mongodb
+        connection = pymongo.MongoClient(settings['MONGODB_URI'])
+        db = connection[settings['MONGODB_DATABASE']]
+        self.profiles_collection = db[settings['MONGODB_PROFILES_COLLECTION']]
+        self.logs_collection = db[settings['MONGODB_LOGS_COLLECTION']]
+
+        self.added = 0
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -44,29 +29,25 @@ class StatsPipeline(object):
 
     def spider_closed(self, spider):
         delta = self.stats.get_value('finish_time') - self.stats.get_value('start_time')
-        self.file.write(str({
+        self.logs_collection.insert_one({
             'start_datetime': self.stats.get_value('start_time'),
             'finish_datetime': self.stats.get_value('finish_time'),
             'total_time_spent': '{}'.format(timedelta(seconds=delta.seconds)),
-            'profiles_added': self.stats.get_value('item_scraped_count'),
-            'profiles_total': self.stats.get_value('item_scraped_count'),
+            'profiles_added': self.added,
+            'profiles_total': self.profiles_collection.count(),
             'errors_count': self.stats.get_value('log_count/ERROR'),
             'retries_count': self.stats.get_value('retry/count')
-        }))
-        self.file.close()
-
-
-class ProfilePipeline(object):
-    def __init__(self):
-        self.file = open("profiles.json", 'ab')
-        self.exporter = JsonItemExporter(self.file, encoding='utf-8', ensure_ascii=False)
-        self.exporter.start_exporting()
-
-    def close_spider(self, spider):
-        self.exporter.finish_exporting()
-        self.file.close()
+        })
 
     def process_item(self, item, spider):
-
-        self.exporter.export_item(item)
+        valid = True
+        for data in item:
+            if not data:
+                valid = False
+                raise DropItem("Missing {0}!".format(data))
+        if valid and not self.profiles_collection.find_one({'profile_url': item['profile_url']}):
+            self.profiles_collection.insert_one(dict(item))
+            self.added += 1
+            log.msg("------------>>>>>>Profile added to MongoDB database!<<<<<<<------------",
+                    level=log.DEBUG, spider=spider)
         return item

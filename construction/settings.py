@@ -61,6 +61,9 @@ DOWNLOADER_MIDDLEWARES = {
     'scrapy_fake_useragent.middleware.RandomUserAgentMiddleware': 400,
 }
 
+CLOSESPIDER_ITEMCOUNT = 20000
+CONCURRENT_REQUESTS = 2
+
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html
 #EXTENSIONS = {
@@ -70,14 +73,17 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-     # 'construction.pipelines.MongoDBPipeline': 300,
-    'construction.pipelines.ProfilePipeline': 300,
-    'construction.pipelines.StatsPipeline': 300,
+     'construction.pipelines.MongoDBPipeline': 300,
 }
 
 # MONGODB CONFIGURATIONS
-# MONGO_URI = 'mongodb://localhost:27017'
-# MONGO_DATABASE = 'construction'
+MONGODB_HOST = 'ds261128.mlab.com:61128'
+MONGODB_USER = 'coax_developer'
+MONGODB_PASS = 'Coax_test_DB!'
+MONGODB_DATABASE = 'scraper_db'
+MONGODB_PROFILES_COLLECTION = 'profiles'
+MONGODB_LOGS_COLLECTION = 'logs'
+MONGODB_URI = 'mongodb://' + MONGODB_USER + ':' + MONGODB_PASS + '@' + MONGODB_HOST + '/' + MONGODB_DATABASE
 # -----------------
 
 # Enable and configure the AutoThrottle extension (disabled by default)
