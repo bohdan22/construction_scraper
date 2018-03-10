@@ -1,0 +1,19 @@
+1. How many professionals/company profiles actually exists and can be discovered and processed? 
+How many unique categories are presented there?
+- categories - 1246
+2. Is it any other ways to review each profile rather then just navigating through the listings? API? 
+Mobile apps?
+- Mobile application
+- Api this site doesn't have
+3. How long it may take to process all profiles using Scrapy engine and store the output to 
+MongoDB by using single scrapy process or in multiprocessing mode?
+- With single scrapy process it takes about 5 hours
+4. If the profile contact email will be shown as image, what you will do to get it?
+- I can use tesseract-ocr with PIL for get image text
+5. What will you do if the target website contains some antibot collecting software installed, 
+preventing or making harder to get required info? (DistillNetworks, CloudFlare and etc.)
+- Use proxy
+- Use random pauses
+- Use random User-Agent
+
+
