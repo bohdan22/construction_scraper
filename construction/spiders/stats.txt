@@ -1,1 +1,0 @@
-{'finish_datetime': datetime.datetime(2018, 3, 9, 8, 53, 40, 454414), 'profiles_added': 9, 'profiles_total': 9, 'errors_count': None, 'start_datetime': datetime.datetime(2018, 3, 9, 8, 53, 29, 964594), 'total_time_spent': '0:00:10', 'retries_count': None}
