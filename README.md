@@ -5,7 +5,7 @@ It's a scraper that collect profiles from http://www.construction.co.uk/construc
 For use it you need Python 3 with installed packages(you can find them in file requirements.txt):
 - Scrapy
 - pymongo
-- fake-useragent
+- scrapy_fake_useragent
 
 For install packages:
 - pip install -r requirements.txt
