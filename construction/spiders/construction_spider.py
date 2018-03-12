@@ -29,10 +29,7 @@ class ConstructionSpider(scrapy.Spider):
         company_list = response.xpath("//div[@id='companyList']//div[@class='defaultList fullWidth pad1']")
 
         # GETTING NAME OF CATEGORY
-        try:
-            category = response.meta['category_name']
-        except:
-            category = 'Something wrong'
+        category = str(response.xpath("//div[@class='defaulttitle_generic']/h1/text()").extract_first()).strip()
 
         for company in company_list:
             company_url = company.xpath("./div[@class='defaultListInfo']/a/@href").extract_first()
