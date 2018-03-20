@@ -106,3 +106,10 @@ MONGODB_URI = 'mongodb://' + MONGODB_USER + ':' + MONGODB_PASS + '@' + MONGODB_H
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+try:
+    from .local_settings import *
+
+    print('SETTINGS: local settings loaded')
+except ImportError:
+    pass

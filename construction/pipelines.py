@@ -14,7 +14,7 @@ class MongoDBPipeline(object):
         # logs info
         self.stats = stats
         # Mongodb
-        connection = pymongo.MongoClient(settings['MONGODB_URI'])
+        connection = pymongo.MongoClient(settings['MONGODB_HOST'], settings['MONGODB_PORT'])
         db = connection[settings['MONGODB_DATABASE']]
         self.profiles_collection = db[settings['MONGODB_PROFILES_COLLECTION']]
         self.logs_collection = db[settings['MONGODB_LOGS_COLLECTION']]

@@ -1,3 +1,4 @@
 #construction/spiders/profiles.json
 #construction/spiders/stats.txt
+construction/local_settings.py
 run.py
